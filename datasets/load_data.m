@@ -1,4 +1,4 @@
-function [] = load_data( name, laeled=False)
+function [ gtrain, gvalidation, gtest, ltrain, lvalidation, ltest ] = load_data( name, path, labeled=False)
     switch lower(name)
     case 'mutag'
     case 'ptc'
@@ -10,4 +10,4 @@ function [] = load_data( name, laeled=False)
     otherwise
         error('Not implemented dataset!')
     end;
-end;
+end
