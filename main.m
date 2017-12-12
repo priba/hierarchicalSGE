@@ -9,13 +9,13 @@ function [  ] = main( params )
     
     %% Create Hierarchy
     for i = 1:lenght(gtrain)
-        gtrain(i) = hierarchical_graph( gtrain(i), params.hierarchy );
+        gtrain(i) = generateHierarchy( gtrain(i), params.hierarchy );
     end; % for
     for i = 1:lenght(gvalidation)
-        gvalidation(i) = hierarchical_graph( gvalidation(i), params.hierarchy );
+        gvalidation(i) = generateHierarchy( gvalidation(i), params.hierarchy );
     end; % for
     for i = 1:lenght(gtest)
-        gtest(i) = hierarchical_graph( gtest(i), params.hierarchy );
+        gtest(i) = generateHierarchy( gtest(i), params.hierarchy );
     end; % for
     
     %% Create Embedding

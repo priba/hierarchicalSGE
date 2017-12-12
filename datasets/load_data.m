@@ -8,6 +8,7 @@ function [ gtrain, gvalidation, gtest, ltrain, lvalidation, ltest ] = load_data(
     case 'd&d'
     case 'mao'
     otherwise
-        error('Not implemented dataset!')
+        error('load_data:incorrectDataset', ...
+            'Error.\nNot implemented dataset %s.', name)
     end;
 end
