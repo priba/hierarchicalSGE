@@ -1,6 +1,6 @@
 function [ G ] = getSubhierarchy( H , leveli, levelj )
-%GETSUBHIERARCHY Summary of this function goes here
-%   Detailed explanation goes here
+%GETSUBHIERARCHY Return a part of the hierarchy given two levels
+%   
 
     if leveli>H.levels || levelj>H.levels
         error('getLevel:incorrectLevel', ...
@@ -12,7 +12,7 @@ function [ G ] = getSubhierarchy( H , leveli, levelj )
         G.levels = 1 ;
         G.szLevels = size(G.am,1) ;
     else
-        % leveli considered smaller
+        % leveli considered smaller than levelj
         if levelj<leveli
             aux = levelj ;
             levelj = leveli ;
@@ -35,5 +35,6 @@ function [ G ] = getSubhierarchy( H , leveli, levelj )
             G.szLevels = G.szLevels - H.szLevels( leveli - 1 ) ;
         end % if
     end % if
-end
+    
+end % function
 

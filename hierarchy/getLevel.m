@@ -1,6 +1,6 @@
 function [ G ] = getLevel( H , level )
-%GETLEVEL Summary of this function goes here
-%   Detailed explanation goes here
+%GETLEVEL Return a specific level of the hierarchy
+%   
 
     if level>H.levels
         error('getLevel:incorrectLevel', ...
@@ -15,5 +15,6 @@ function [ G ] = getLevel( H , level )
     
     G.am = H.am( start:H.szLevels(level) , start:H.szLevels(level)) ;
     G.nl.values = H.nl.values( start:H.szLevels(level), :) ;
-end
+    
+end % function
 
