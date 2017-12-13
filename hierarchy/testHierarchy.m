@@ -14,7 +14,6 @@ function [  ] = testHierarchy( mutag_path, levels, clustering, reduction, delta 
     G = G.MUTAG(idx) ;
     
     % Hierarchy
-    addpath('hierarchy')
     H = generateHierarchy( G, levels, clustering, reduction, delta ) ;
     
     % Hierarchy operation
@@ -27,7 +26,6 @@ function [  ] = testHierarchy( mutag_path, levels, clustering, reduction, delta 
             getSubhierarchy(H, i, j)
         end % for
     end % for
-    rmpath('hierarchy')
     
 end % function
 
