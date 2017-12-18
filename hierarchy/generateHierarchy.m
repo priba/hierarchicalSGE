@@ -70,5 +70,5 @@ function [ H ] = generateHierarchy( G, levels, clustering_func, reduction, delta
         A = H.am( H.szLevels(end-1)+1:H.szLevels(end) , H.szLevels(end-1)+1:H.szLevels(end) ) ;
     end % for
     
-end
+end % function
 

@@ -4,11 +4,11 @@
 
 ### Stochastic Graphlet Embedding
 
-See Anjan's paper.
+* Anjan Dutta and Hichem Sahbi, "[High Order Stochastic Graphlet Embedding for Graph-Based Pattern Recognition](https://arxiv.org/pdf/1702.00156.pdf)", arXiv preprint arXiv:1702.00156, 2017.
 
 ### Pyramidal Stochastic Graphlet Embedding
 
-See ICDAR paper.
+* Anjan Dutta, Pau Riba, Josep Lladós and Alicia Fornés, "[Pyramidal Stochastic Graphlet Embedding for Document Pattern Classification](http://www.cvc.uab.es/people/priba/assets/publi/conf/2017_ICDAR_ADutta.pdf)", ICDAR, pp.33-38, 2017.
 
 ### Hierarchical Stochastic Graphlet Embedding
 
