@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 function [ data ] = load_data( name, path )
 %LOAD_DATA 
     switch upper(name)
@@ -47,24 +46,6 @@ function [ data ] = load_data( name, path )
         data.dataset.graphs = DD ;
         data.type = 'kfold' ;
     case 'MAO'
-=======
-function [ gtrain, gvalidation, gtest, ltrain, lvalidation, ltest ] = load_data( name, path, labeled)
-%LOAD_DATA 
-    switch lower(name)
-    case 'mutag'
-        disp('Loading MUTAG...')
-    case 'ptc'
-        disp('Loading PTC...')
-    case 'proteins'
-        disp('Loading PROTEINS...')
-    case 'nci1'
-        disp('Loading NCI1...')
-    case 'nci109'
-        disp('Loading NCI109...')
-    case 'd&d'
-        disp('Loading D&D...')
-    case 'mao'
->>>>>>> d60c0166f1b74778d515bc2548fee794a18b7344
         disp('Loading MAO...')
     otherwise
         error('load_data:incorrectDataset', ...
@@ -72,9 +53,5 @@ function [ gtrain, gvalidation, gtest, ltrain, lvalidation, ltest ] = load_data(
     end; % switch
     
     disp('Dataset loaded.')
-<<<<<<< HEAD
-end % function
-=======
-end % function
 
->>>>>>> d60c0166f1b74778d515bc2548fee794a18b7344
+end % function

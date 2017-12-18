@@ -9,7 +9,7 @@ rng(0);
 params = set_parameters() ;
 
 % Set paths
-set_paths(params) ;
+add_paths(params) ;
 
 % Load dataset
 data = load_data(dataset_name, params.p_data) ;
