@@ -1,5 +1,6 @@
 function add_paths()
 
+    % External Libraries
     libpaths = set_paths( ) ;
     
     path_matlabbgl = [ libpaths.matlabbgl 'matlab_bgl' ] ;
@@ -9,5 +10,11 @@ function add_paths()
     addpath(path_matlabbgl) ;
     addpath(path_libsvm) ;
     run(path_vlfeat) ;
+    
+    % Local Folders
+    addpath('./clustering/')
+    addpath('./datasets/')
+    addpath('./hierarchy/')
+    addpath('./graphlet_sampler/')
     
 end

@@ -15,6 +15,14 @@
 * Adjacency matrix of the whole hierarchical representation.
 * Concatenate combinations oflevels with hierarchical edges.
 
+## Requirements
+
+* [Matlab BGL](https://es.mathworks.com/matlabcentral/fileexchange/10922-matlabbgl)
+* [VLFEAT](http://www.vlfeat.org/)
+* [LIBSVM](https://www.csie.ntu.edu.tw/~cjlin/libsvm/)
+
+Please, set the path to the corresponding libraries in the file [set_paths.m](https://github.com/priba/hierarchicalSGE/blob/master/libs/set_paths.m).
+
 ## Datasets
 
 Collection of datasets to test: 

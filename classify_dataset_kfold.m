@@ -1,18 +1,7 @@
-function [  ] = classify_dataset_kfold( data, params, varargin )
+function [  ] = classify_dataset_kfold( data, params, logger, varargin )
 %CLASSIFY_DATASET Summary of this function goes here
 %   Detailed explanation goes here    
-    
-    % Output folder
-    if ~exist( params.p_out , 'dir' )
-        mkdir( params.p_out ) ;
-    end
-    
-    % Output file
-    params.headerSpec = 'Dataset: %s (%d graphs; %d classes; %d iterations)\n';
-    params.sgeSpec = '\t*Stochastic Graphlet Embedding:\n\t\tEpsilon: %f\n\t\tDelta: %f\n';
-    params.pyrSpec = '\t*Pyramidal:\n\t\tLevels: %d\n\t\tReduction: %f\n\t\tEdge Threshold: %f\n\t\tClustering function: %s\n';
-    params.sepSpec = '----------------------------------------------------\n';    
-    
+            
     %% Default values
     [epsi, del, pyr_levels, pyr_reduction, delta, clustering_func, MAX2,...
         node_label, nits, VERBOSE, task_id, config] = input_parser( varargin ) ;
@@ -67,7 +56,7 @@ function [  ] = classify_dataset_kfold( data, params, varargin )
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%% comment the following line  %%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     ngraphs = 5 ; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % ngraphs = 5 ; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -239,16 +228,7 @@ function [  ] = classify_dataset_kfold( data, params, varargin )
     clear global_var;
     
     % Save results
-    if task_id<0
-        fileID = fopen([params.p_out filesep data.dataset.name '_' node_label '.txt'],'a') ;
-    else
-        fileID = fopen([params.p_out filesep data.dataset.name '_' node_label '_' num2str(task_id) '.txt'],'a') ;
-    end
-    
-    fprintf(fileID,params.headerSpec, data.dataset.name, ngraphs, nclasses, nits) ;
-    fprintf(fileID,params.sgeSpec, epsi , del) ;
-    fprintf(fileID,params.pyrSpec, pyr_levels , pyr_reduction , delta , func2str(clustering_func)) ;
-    
+        
     if strcmpi(node_label, 'unlabel')
         combinations = combinations + 2;
     else
@@ -257,22 +237,7 @@ function [  ] = classify_dataset_kfold( data, params, varargin )
         end ;
     end ;
     for i = 1:size(combinations,1)
-        fprintf(fileID, 't = ');
-        if VERBOSE
-            fprintf('t = ');
-        end ;
-        for j = 1:size(combinations,2)
-            fprintf(fileID, '%d\t', combinations(i,j)) ;
-            if VERBOSE
-            	fprintf('%d\t', combinations(i,j)) ;
-            end ;
-        end ;
-        fprintf(fileID, '%.2f \\pm %.2f \n', maccs(i),mstds(i));
-        if VERBOSE
-            fprintf('%.2f \\pm %.2f \n', maccs(i),mstds(i));
-        end ;
+        logger(epsi, del, combinations(i,:), node_label, pyr_levels, pyr_reduction, delta, func2str(clustering_func), config, nits, maccs(i), mstds(i))
     end;
-    fprintf(fileID,params.sepSpec) ;
-    fclose(fileID);   
     
 end

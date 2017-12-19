@@ -1,5 +1,6 @@
 function remove_paths()
 
+    % External Libraries
     libpaths = set_paths( ) ;
     
     path_matlabbgl = [ libpaths.matlabbgl 'matlab_bgl' ] ;
@@ -7,6 +8,12 @@ function remove_paths()
     
     rmpath(path_matlabbgl) ;
     rmpath(path_libsvm) ;
+    
+    % Local Folders
+    rmpath('./clustering/')
+    rmpath('./datasets/')
+    rmpath('./hierarchy/')
+    rmpath('./graphlet_sampler/')
     
 end
     
