@@ -1,50 +1,57 @@
 %% Run classification script
-function [] = run_hsge(dataset_name)
+function [] = run_hsge(dataset_path, dataset_name)
 
-clc;
+    clc;
 
-rng(0); 
+    rng(0); 
 
-% Set parameters
-params = set_parameters() ;
+    % Set parameters
+    params = set_parameters() ;
 
-% Set paths
-add_paths(params) ;
+    % Set paths
+    addpath('./libs/')
+    add_paths( ) ;
+    rmpath('./libs/')
+    
+    % Load dataset
+    % data = load_data(dataset_name, dataset_path) ;
 
-% Load dataset
-data = load_data(dataset_name, params.p_data) ;
+    % Print information
+    VERBOSE = 1 ;
 
-% Print information
-VERBOSE = 1 ;
+    % SGE
+    eps_i = [ 0.1 , 0.05 ] ;
+    del_i = [ 0.1 , 0.05 ] ;
+    max2 = [7, 5, 3] ;
+    node_label = 'unlabel' ;
 
-% SGE
-eps_i = [ 0.1 , 0.05 ] ;
-del_i = [ 0.1 , 0.05 ] ;
-max2 = [7, 5, 3] ;
-node_label = 'unlabel' ;
+    % Hierarchy
+    pyr_levels = [ 3 ] ;
+    addpath('./clustering/')
+    clustering_func = get_clustering( 'girvan_newman' ) ; % girvan_newman ; % grPartition ;
+    rmpath('./clustering/')
+    pyr_reduction = 2 ;
+    delta = 0.1 ;
+    config = 'comb' ;
 
-% Hierarchy
-pyr_levels = [ 3 ] ;
-clustering_func = @girvan_newman ; % @grPartition ;
-pyr_reduction = 2 ;
-delta = 0.1 ;
-config = 'comb' ;
+    % Standard error
+    nits = 10 ;
 
-% Standard error
-nits = 10 ;
-
-for eps = eps_i
-    for del = del_i
-        for pyr_level = pyr_levels
-            if strcmp(data.type, 'kfold')
-                classify_dataset_kfold(data, params, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-                    'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'delta', delta, ...
-                    'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
-                    'config', config);
-            end
+    for eps = eps_i
+        for del = del_i
+            for pyr_level = pyr_levels
+                if strcmp(data.type, 'kfold')
+                    classify_dataset_kfold(data, params, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+                        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'delta', delta, ...
+                        'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+                        'config', config);
+                end
+            end 
         end 
-    end 
-end
+    end
 
-% Remove paths
-remove_paths(params) ;
+    % Remove paths
+    addpath('./libs/')
+    remove_paths( ) ;
+    rmpath('./libs/')
+end

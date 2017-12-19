@@ -122,11 +122,7 @@ function [  ] = classify_dataset_kfold( data, params, varargin )
         % Embedding
         for j = 1:n_parts
             if any(hier_graph{j}.am(:))
-                if (j > 1)
-                    [ global_var(j) ] = graphlet_embedding(hier_graph{j} , i , M{j} , global_var(j), MAX2(parts2level(j)) , node_label) ;
-                else
-                    [ global_var(j) ] = graphlet_embedding(hier_graph{j} , i , M{j} , global_var(j), MAX2(parts2level(j)) , node_label ) ;
-                end 
+                [ global_var(j) ] = graphlet_embedding(hier_graph{j} , i , M{j} , global_var(j), MAX2(parts2level(j)) , node_label ) ;
             end 
         end 
                 
