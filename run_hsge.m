@@ -9,9 +9,9 @@ function [] = run_hsge(dataset_path, dataset_name)
     params = set_parameters() ;
 
     % Set paths
+    addpath('./clustering/')
     addpath('./libs/')
     add_paths( ) ;
-    rmpath('./libs/')
     
     % Load dataset
     % data = load_data(dataset_name, dataset_path) ;
@@ -27,9 +27,9 @@ function [] = run_hsge(dataset_path, dataset_name)
 
     % Hierarchy
     pyr_levels = [ 3 ] ;
-    addpath('./clustering/')
+    
     clustering_func = get_clustering( 'girvan_newman' ) ; % girvan_newman ; % grPartition ;
-    rmpath('./clustering/')
+    
     pyr_reduction = 2 ;
     delta = 0.1 ;
     config = 'comb' ;
@@ -51,7 +51,7 @@ function [] = run_hsge(dataset_path, dataset_name)
     end
 
     % Remove paths
-    addpath('./libs/')
     remove_paths( ) ;
     rmpath('./libs/')
+    rmpath('./clustering/')
 end

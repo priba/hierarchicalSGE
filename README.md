@@ -19,12 +19,12 @@
 
 Collection of datasets to test: 
 
-- [ ] MUTAG
-- [ ] PTC
-- [ ] PROTEINS
-- [ ] NCI1
-- [ ] NCI109
-- [ ] D & D
+- [X] MUTAG
+- [X] PTC
+- [X] PROTEINS
+- [X] NCI1
+- [X] NCI109
+- [X] D & D
 - [ ] MAO
 
 ## Paper
