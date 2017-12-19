@@ -244,9 +244,9 @@ function [  ] = classify_dataset_kfold( data, params, varargin )
     
     % Save results
     if task_id<0
-        fileID = fopen([params.p_out data.dataset.name '_' node_label '.txt'],'a') ;
+        fileID = fopen([params.p_out filesep data.dataset.name '_' node_label '.txt'],'a') ;
     else
-        fileID = fopen([params.p_out data.dataset.name '_' node_label '_' num2str(task_id) '.txt'],'a') ;
+        fileID = fopen([params.p_out filesep data.dataset.name '_' node_label '_' num2str(task_id) '.txt'],'a') ;
     end
     
     fprintf(fileID,params.headerSpec, data.dataset.name, ngraphs, nclasses, nits) ;
@@ -277,10 +277,6 @@ function [  ] = classify_dataset_kfold( data, params, varargin )
         end ;
     end;
     fprintf(fileID,params.sepSpec) ;
-    fclose(fileID);
-    
-    
-    %% Rmpaths
-    remove_paths(params) ;
+    fclose(fileID);   
     
 end

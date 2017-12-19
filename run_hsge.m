@@ -44,4 +44,7 @@ for eps = eps_i
             end
         end 
     end 
-end 
+end
+
+% Remove paths
+remove_paths(params) ;
