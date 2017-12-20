@@ -221,8 +221,8 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
         end ;
 
         % Mean and standard deviation
-        maccs(c) = mean(accs);
-        mstds(c) = std(accs)./sqrt(nits);
+        maccs(c) = mean(accs) ;
+        mstds(c) = std(accs) ;
     end
     
     clear global_var;
@@ -238,6 +238,6 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
     end ;
     for i = 1:size(combinations,1)
         logger(epsi, del, combinations(i,:), node_label, pyr_levels, pyr_reduction, delta, func2str(clustering_func), config, nits, maccs(i), mstds(i))
-    end;
+    end ;
     
 end
