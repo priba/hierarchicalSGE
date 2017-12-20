@@ -15,7 +15,7 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     end % if
     
     d = dir( [ output_path, '/*.csv' ]) ;
-    fileId = fopen([output_path, int2str(length(d)),  '_run.csv' ], 'a') ;
+    fileId = fopen([output_path, int2str(length(d)),  '_run.csv' ], 'w') ;
     clear d
     
     % Header

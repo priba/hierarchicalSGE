@@ -77,24 +77,24 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
                 hier_graph{hc} = getLevel(H, i_) ;
                 hc = hc + 1 ;
             end % if
-            for j_ = i_+1:pyr_levels
-                if ~strcmpi(config, 'level') 
+            if ~strcmpi(config, 'level')
+                for j_ = i_+1:pyr_levels
                     hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
                     hc = hc + 1 ;
-                end
-            end % for
+                end ; % for
+            end ; % if
         end ; % for
         
         % Embedding
         for j = 1:n_parts
             if any(hier_graph{j}.am(:))
                 [ global_var(j) ] = graphlet_embedding(hier_graph{j} , i , M{j} , global_var(j), MAX2(parts2level(j)) , node_label ) ;
-            end 
-        end 
+            end % if
+        end % for
                 
         if VERBOSE
             toc
-        end 
+        end % if
     end
 
     % Histogram dimensions
