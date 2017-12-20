@@ -178,7 +178,6 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
                 lngth_idx = length(idx);
                 p90 = round(lngth_idx*0.9);
                 train_set = [train_set;randsample(idx,p90)];
-
             end
 
             train_set = sort(train_set);
