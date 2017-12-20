@@ -1,4 +1,4 @@
-function add_paths()
+function add_paths(root_path)
 
     % External Libraries
     libpaths = set_paths( ) ;
@@ -12,9 +12,9 @@ function add_paths()
     run(path_vlfeat) ;
     
     % Local Folders
-    addpath('./clustering/')
-    addpath('./datasets/')
-    addpath('./hierarchy/')
-    addpath('./graphlet_sampler/')
-    
+    addpath(fullfile(root_path, '/clustering/')) ;
+    addpath(fullfile(root_path, '/datasets/')) ;
+    addpath(fullfile(root_path, '/hierarchy/')) ;
+    addpath(fullfile(root_path, '/graphlet_sampler/')) ;
+
 end
