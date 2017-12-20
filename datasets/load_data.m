@@ -40,7 +40,7 @@ function [ data ] = load_data( name, path )
         data.type = 'kfold' ;
     case 'DD'
         disp('Loading D&D...')
-        load(fullfile(p_data,'DD.mat')) ; 
+        load(fullfile(path,'DD.mat')) ; 
         data.dataset.name = 'DD' ;
         data.dataset.clss = ldd ;
         data.dataset.graphs = DD ;

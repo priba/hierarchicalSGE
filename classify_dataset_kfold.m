@@ -17,6 +17,14 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
                 n_parts = pyr_levels ;
                 len = ones(pyr_levels, 1) ;
                 val = ones(pyr_levels, 1) ; 
+            case 'base'
+                if pyr_levels ~= 1
+                    warning('config is base but pyr_levels is not one')
+                    pyr_levels = 1 ;
+                end
+                n_parts = pyr_levels ;
+                len = 1 ;
+                val = 1 ;
             otherwise
                 error('classify_dataset_kfold:get_parts:incorrectConfig', ...
                     'Error.\nNot implemented config %s.', config)
@@ -32,8 +40,9 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
     end % function
     
     %% Default values
-    [epsi, del, pyr_levels, pyr_reduction, delta, clustering_func, MAX2,...
+    [epsi, del, pyr_levels, pyr_reduction, edge_thresh, clustering_func, MAX2,...
         node_label, nits, VERBOSE, task_id, config] = input_parser( varargin ) ;
+
     rng(0);
     
     %% Decide the parts according to the config
@@ -66,24 +75,31 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
             tic ;
         end
         
-        H = generateHierarchy( data.dataset.graphs(i), pyr_levels, clustering_func, pyr_reduction, delta ) ;
-        
-        hier_graph = cell(n_parts, 1) ;
-        hc = 1 ;
-        
-        % Construct hierarchy           
-        for i_ = 1:pyr_levels
-            if ~strcmpi(config, 'hier')
-                hier_graph{hc} = getLevel(H, i_) ;
-                hc = hc + 1 ;
-            end % if
-            if ~strcmpi(config, 'level')
-                for j_ = i_+1:pyr_levels
-                    hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
+        if ~strcmpi(config, 'base')
+            H = generateHierarchy( data.dataset.graphs(i), pyr_levels, clustering_func, pyr_reduction, edge_thresh ) ;
+
+            hier_graph = cell(n_parts, 1) ;
+            hc = 1 ;
+
+            % Construct hierarchy           
+            for i_ = 1:pyr_levels
+                if ~strcmpi(config, 'hier')
+                    hier_graph{hc} = getLevel(H, i_) ;
                     hc = hc + 1 ;
-                end ; % for
-            end ; % if
-        end ; % for
+                end % if
+                if ~strcmpi(config, 'level')
+                    for j_ = i_+1:pyr_levels
+                        hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
+                        hc = hc + 1 ;
+                    end ; % for
+                end ; % if
+            end ; % for
+            
+        else
+            
+            hier_graph{n_parts} = data.dataset.graphs(i) ;
+            
+        end % if
         
         % Embedding
         for j = 1:n_parts
@@ -213,7 +229,7 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
         end ;
     end ;
     for i = 1:size(combinations,1)
-        logger(epsi, del, combinations(i,:), node_label, pyr_levels, pyr_reduction, delta, func2str(clustering_func), config, nits, maccs(i), mstds(i))
+        logger(epsi, del, combinations(i,:), node_label, pyr_levels, pyr_reduction, edge_thresh, func2str(clustering_func), config, nits, maccs(i), mstds(i))
     end ;
     
 end

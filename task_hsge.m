@@ -1,37 +1,57 @@
 %% Run classification script
-function [] = task_hsge(task_id)
+function [] = task_hsge(task_id, dataset_path, dataset_name, output_path)
 
     clc;
-
     rng(0); 
+    
+     % Check input parameters
+    if nargin < 3
+        output_path = [ './output/', dataset_name, '/'] ;
+    end % if
 
-    addpath(genpath('./clustering'));
+    if ~exist(output_path, 'dir')
+        mkdir(output_path)
+    end % if
+        
+    fileId = fopen(fullfile(output_path, [task_id, '_run.csv']), 'w') ;
+    
+    % Header
+    fprintf(fileId,'Epsilon;Delta;T;Labelled;Levels;Reduction;Edge_Threshold;Clustering;Config;Iterations;;Mean;Std\n') ;
+    % Logger
+    logger = @(eps, del, t, label, level, reduction, del_pyr, clustering_func, config, nits, maccs, mstds) ...
+        fprintf(fileId,'%f;%f;%s;%s;%d;%f;%f;%s;%s;%d;;%f;%f\n', eps, del, int2str(t), label, level, reduction, del_pyr, clustering_func, config, nits, maccs, mstds) ;
+    
+    % Set parameters
+    params = set_parameters() ;
 
+    % Set paths
+    addpath('./libs/')
+    add_paths( ) ;
+    
+    % Load dataset
+    data = load_data(dataset_name, dataset_path) ;
+    
+    % Information
+    VERBOSE = 1 ;
+    
+    % Number of iterations
+    nits = 10 ;
+    
     run_params = experiments();
 
-    % Dataset
-    dataset_name = 'GREC';
+    eps = run_params{task_id, 1}; 
+    del = run_params{task_id, 2};
+    node_label = run_params{task_id, 3};
+    pyr_level = run_params{task_id, 4};
+    pyr_reduction = run_params{task_id, 5};
+    edge_thresh = run_params{task_id, 6};
+    clustering_func = run_params{task_id, 7};
+    config = run_params{task_id, 8};
+    max2  = run_params{task_id, 9};
 
-    % Information
-    VERBOSE = 0 ;
-
-    eps = run_params{task_id,1}; 
-    del = run_params{task_id,2};
-    node_label = run_params{task_id,3};
-    pyr_level = run_params{task_id,4};
-    pyr_reduction = run_params{task_id,5};
-    edge_tresh = run_params{task_id,6};
-    clustering_func = run_params{task_id,7};
-    max2  = run_params{task_id,8};
-
-
-    if ismember(lower(dataset_name), {'grec','gwhistograph'})
-        classify_dataset_partition(dataset_name, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-            'pyr_levels', pyr_level,'pyr_reduction', pyr_reduction, 'edge_tresh', edge_tresh, ...
-            'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func);
-    else
-        classify_dataset_kfold(dataset_name, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-            'pyr_levels', pyr_level,'pyr_reduction', pyr_reduction, 'edge_tresh', edge_tresh, ...
-            'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func);
-    end
+    classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+    'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
+    'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+    'config', config, 'nits', nits, 'task_id', task_id) ;
+    
 end

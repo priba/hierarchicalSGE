@@ -41,7 +41,7 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     eps_i = [ 0.1 , 0.05 ] ;
     del_i = [ 0.1 , 0.05 ] ;
     max2 = [7, 5, 3] ;
-    node_label = { 'unlabel' , 'label' } ;
+    node_label = 'unlabel' ; % { 'unlabel' , 'label' } ;
 
     % Hierarchy
     pyr_levels = [ 1 , 2 , 3 ] ;
@@ -49,8 +49,8 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     clustering_func = get_clustering( 'girvan_newman' ) ; % girvan_newman ; % grPartition ;
     
     pyr_reduction = 2 ;
-    delta = 0 ;
-    config = { 'comb', 'hier', 'level' } ;
+    edge_thresh = 0 ;
+    config = 'base' ;% { 'base', 'comb', 'hier', 'level' } ;
 
     % Standard error
     nits = 10 ;
@@ -58,11 +58,11 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     for eps = eps_i
         for del = del_i
             for pyr_level = pyr_levels
-                if strcmp(data.type, 'kfold')
+                if strcmp(data.type, 'kfold')                                        
                     classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-                        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'delta', delta, ...
+                        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
                         'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
-                        'config', config, 'nits', nits);
+                        'config', config, 'nits', nits) ;
                 end
             end 
         end 
