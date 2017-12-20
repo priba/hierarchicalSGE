@@ -2,37 +2,42 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
 %CLASSIFY_DATASET Summary of this function goes here
 %   Detailed explanation goes here    
             
+    function [parts2level , n_parts] = get_parts(config, pyr_levels)
+        %% Decide the parts according to the config
+        switch lower(config)
+            case 'comb'
+                n_parts = pyr_levels*(pyr_levels+1)/2 ;
+                len = pyr_levels:-1:1 ;
+                val = 1:pyr_levels ;        
+            case 'hier'
+                n_parts = pyr_levels*(pyr_levels-1)/2 ;        
+                len = pyr_levels-1:-1:1 ;
+                val = 1:pyr_levels-1 ; 
+            case 'level'
+                n_parts = pyr_levels ;
+                len = ones(pyr_levels, 1) ;
+                val = ones(pyr_levels, 1) ; 
+            otherwise
+                error('classify_dataset_kfold:get_parts:incorrectConfig', ...
+                    'Error.\nNot implemented config %s.', config)
+        end
+        
+        % Parts to level correspondence matrix
+        temp1 = cumsum(len);
+        temp2 = zeros(1, temp1(end));
+        temp2(temp1(1:end-1)+1) = 1;
+        temp2(1) = 1;
+        parts2level = val(cumsum(temp2));
+    
+    end % function
+    
     %% Default values
     [epsi, del, pyr_levels, pyr_reduction, delta, clustering_func, MAX2,...
         node_label, nits, VERBOSE, task_id, config] = input_parser( varargin ) ;
     rng(0);
     
     %% Decide the parts according to the config
-    
-    if strcmp(config, 'comb')
-        n_parts = pyr_levels*(pyr_levels+1)/2 ;
-        len = pyr_levels:-1:1 ;
-        val = 1:pyr_levels ;        
-    elseif strcmp(config, 'hier')
-        n_parts = pyr_levels*(pyr_levels-1)/2 ;        
-        len = pyr_levels-1:-1:1 ;
-        val = 1:pyr_levels-1 ; 
-    elseif strcmp(config, 'level')
-        n_parts = pyr_levels ;
-        len = ones(pyr_levels, 1) ;
-        val = ones(pyr_levels, 1) ; 
-    else
-        error('Wrong configuration') ;
-    end
-    
-    % Parts to level correspondence matrix
-    temp1 = cumsum(len);
-    temp2 = zeros(1, temp1(end));
-    temp2(temp1(1:end-1)+1) = 1;
-    temp2(1) = 1;
-    parts2level = val(cumsum(temp2));
-    
-    clear temp1 temp2 ;
+    [parts2level , n_parts] = get_parts(config, pyr_levels) ;
 
     %% Database information
     ngraphs = size(data.dataset.graphs,2);
@@ -53,13 +58,6 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
     end
     
     %% Iterate whole dataset
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%% comment the following line  %%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % ngraphs = 5 ; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     for i = 1:ngraphs
         
@@ -70,54 +68,33 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
         
         H = generateHierarchy( data.dataset.graphs(i), pyr_levels, clustering_func, pyr_reduction, delta ) ;
         
-        if strcmp(config, 'comb')
-            
-            hier_graph = cell(n_parts, 1) ;
-            hc = 1 ;
-            % Construct hierarchy           
-            for i_ = 1:pyr_levels
+        hier_graph = cell(n_parts, 1) ;
+        hc = 1 ;
+        
+        % Construct hierarchy           
+        for i_ = 1:pyr_levels
+            if ~strcmpi(config, 'hier')
                 hier_graph{hc} = getLevel(H, i_) ;
                 hc = hc + 1 ;
+            end % if
+            if ~strcmpi(config, 'level')
                 for j_ = i_+1:pyr_levels
                     hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
                     hc = hc + 1 ;
-                end % for
-            end % for
-            
-        elseif strcmp(config, 'hier')
-            
-            hier_graph = cell(n_parts, 1) ;
-            hc = 1 ;
-            % Construct hierarchy           
-            for i_ = 1:pyr_levels                
-                for j_ = i_+1:pyr_levels
-                    hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
-                    hc = hc + 1 ;
-                end % for
-            end % for
-            
-        elseif strcmp(config, 'level')            
-            
-            hier_graph = cell(n_parts, 1) ;
-            % Construct hierarchy           
-            for i_ = 1:pyr_levels
-                hier_graph{i} = getLevel(H, i_) ;
-            end % for
-            
-        else
-            error('Wrong configuration');           
-        end       
+                end ; % for
+            end ; % if
+        end ; % for
         
         % Embedding
         for j = 1:n_parts
             if any(hier_graph{j}.am(:))
                 [ global_var(j) ] = graphlet_embedding(hier_graph{j} , i , M{j} , global_var(j), MAX2(parts2level(j)) , node_label ) ;
-            end 
-        end 
+            end % if
+        end % for
                 
         if VERBOSE
             toc
-        end 
+        end % if
     end
 
     % Histogram dimensions
