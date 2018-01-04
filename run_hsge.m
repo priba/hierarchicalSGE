@@ -28,8 +28,9 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     params = set_parameters() ;
 
     % Set paths
-    addpath('./libs/')
-    add_paths( ) ;
+    root_path = fileparts(mfilename('fullpath')) ;
+    addpath(fullfile(root_path, '/libs/')) ;
+    add_paths(root_path) ;
     
     % Load dataset
     data = load_data(dataset_name, dataset_path) ;

@@ -13,7 +13,7 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, output_path)
         mkdir(output_path)
     end % if
         
-    fileId = fopen(fullfile(output_path, [task_id, '_run.csv']), 'w') ;
+    fileId = fopen(fullfile(output_path, [sprintf('%02d', task_id), '_run.csv']), 'w') ;
     
     % Header
     fprintf(fileId,'Epsilon;Delta;T;Labelled;Levels;Reduction;Edge_Threshold;Clustering;Config;Iterations;;Mean;Std\n') ;

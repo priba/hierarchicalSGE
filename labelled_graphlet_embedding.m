@@ -1,7 +1,7 @@
 function global_var = labelled_graphlet_embedding( graph , graph_id , M , global_var, MAX2 ) 
 
-    [I,J] = find(graph.am);
-    % [I,J] = find(triu(graph.am |graph.am')); % Undirected graph
+%     [I,J] = find(graph.am);
+    [I,J] = find(triu(graph.am | graph.am')); % Undirected graph
     % nV = size(graph.am,1);
 
     L = uint32([I,J]);
