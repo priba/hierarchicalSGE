@@ -208,9 +208,9 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
 
             model_libsvm = svmtrain(train_classes,K_train,options);
 
-            [~,acc,~] = svmpredict(test_classes,K_test,model_libsvm,'-b 1');
+            [~,acc,~] = svmpredict(test_classes,K_test,model_libsvm,'-b 1') ;
             accs(it) = acc(1);
-        end ;
+        end 
 
         % Mean and standard deviation
         maccs(c) = mean(accs) ;
@@ -226,10 +226,10 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
     else
         if size(combinations, 2) > 1
             combinations(:, 2:end) = combinations(:, 2:end) + 2;
-        end ;
-    end ;
+        end
+    end 
     for i = 1:size(combinations,1)
-        logger(epsi, del, combinations(i,:), node_label, pyr_levels, pyr_reduction, edge_thresh, func2str(clustering_func), config, nits, maccs(i), mstds(i))
-    end ;
+        logger(epsi, del, combinations(i,:), node_label, pyr_levels, pyr_reduction, edge_thresh, func2str(clustering_func), config, nits, maccs(i), mstds(i)) ;
+    end 
     
 end
