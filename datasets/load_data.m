@@ -77,7 +77,7 @@ function [ data ] = load_data( name, path )
         data.type = 'kfold' ;
     case 'MAO'
         disp('Loading MAO...')
-        fp = fopen(fullfile(path, 'dataset.ds')) ;
+        fp = fopen(fullfile(path, 'MAO', 'dataset.ds')) ;
         C = textscan(fp, '%s %d') ;
         fclose(fp) ;
         
@@ -93,7 +93,7 @@ function [ data ] = load_data( name, path )
         
         for i = 1:ngraphs
             [~, ~, atrvertices, edges, ~, atredges] =...
-                    read_mao_ct(fullfile(path, graph_names{i}));
+                    read_mao_ct(fullfile(path, 'MAO', graph_names{i}));
             MAO(i).am = full(sparse(edges(:, 1), edges(:, 2), 1, size(atrvertices, 1), size(atrvertices, 1))) ;
             [~, MAO(i).nl.values] = ismember(atrvertices, cntrs_atrvertices) ;
             MAO(i).el.values = atredges ;
