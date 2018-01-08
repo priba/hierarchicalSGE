@@ -136,11 +136,8 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
         combinations{j} = (1:MAX2(j)-2)' ;
     end
     combinations = allcomb( combinations ) ;
-    
-    maccs = zeros(size(combinations, 1), 1);
-    mstds = zeros(size(combinations, 1), 1);
-    
-    accs = zeros(nits, MAX2-2);
+        
+    accs = zeros(nits, prod(MAX2-2));
     
     for it = 1:nits
 
