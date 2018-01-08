@@ -2,9 +2,13 @@ function [ cluster ] = girvan_newman( A , lambda )
 %GIRVAN_NEWMAN Summary of this function goes here
 %   Detailed explanation goes here
 
-    if lambda > size(A,1) || lambda < 1
+    if lambda < 1
+        lambda = 1;
+    end ; % if
+    
+    if lambda > size(A,1)
         error('Not a correct lambda size')
-    end;
+    end ; % if
     
     % Make it undirected
     A = (A + A')/2;
