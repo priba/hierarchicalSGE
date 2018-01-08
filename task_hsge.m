@@ -16,7 +16,7 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, output_path)
     fileId = fopen(fullfile(output_path, [sprintf('%02d', task_id), '_run.csv']), 'w') ;
     
     % Header
-    fprintf(fileId,'Epsilon;Delta;T;Labelled;Levels;Reduction;Edge_Threshold;Clustering;Config;Iterations;;Mean;Std\n') ;
+%     fprintf(fileId,'Epsilon;Delta;T;Labelled;Levels;Reduction;Edge_Threshold;Clustering;Config;Iterations;;Mean;Std\n') ;
     % Logger
     logger = @(eps, del, t, label, level, reduction, del_pyr, clustering_func, config, nits, maccs, mstds) ...
         fprintf(fileId,'%f;%f;%s;%s;%d;%f;%f;%s;%s;%d;;%f;%f\n', eps, del, int2str(t), label, level, reduction, del_pyr, clustering_func, config, nits, maccs, mstds) ;
