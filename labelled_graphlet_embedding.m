@@ -58,7 +58,7 @@ function global_var = labelled_graphlet_embedding( graph , graph_id , M , global
 
     for j = 1:size(graphletsge5,1)
         A = sparse(indices_vertices_graphletsge5{j}(1:2:end),indices_vertices_graphletsge5{j}(2:2:end),1,szA(j),szA(j));
-        betweenness_centralities{j} = sort(round(betweenness_centrality(double(A|A'))*1e4))';
+        betweenness_centralities{j} = sort(round(betweenness_centrality(double(A|A'))))';
     end;
 
     clear graphletsge5;
