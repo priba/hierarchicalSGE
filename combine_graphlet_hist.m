@@ -20,8 +20,8 @@ function [ hist ] = combine_graphlet_hist( histogram, t, combine_graphlet )
             hist = cat(2, temp{:}) ;
         else
             hist = [] ;
-        end ;
-    end ;
+        end
+    end
 
 end
 

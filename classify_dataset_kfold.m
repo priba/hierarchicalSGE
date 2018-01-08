@@ -140,52 +140,47 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
     maccs = zeros(size(combinations, 1), 1);
     mstds = zeros(size(combinations, 1), 1);
     
-    for c = 1:size(combinations,1)
-        
-        comb = combinations(c,:);
-        
-        % Concat histogram
-        comb_hist = [];
-        for i = 1:length(comb)
-            comb_hist = [comb_hist, combine_graphlet_hist(histograms(parts2level == i), comb(i), 'not_combine') ];
+    accs = zeros(nits, MAX2-2);
+    
+    for it = 1:nits
+
+        train_set = [];
+
+        for i = classes'
+            idx = find(data.dataset.clss == i);
+            lngth_idx = length(idx);
+            p90 = round(lngth_idx*0.9);
+            train_set = [train_set;randsample(idx,p90)];
         end
-        
-        % Normalize hist
-        comb_hist = bsxfun(@times, comb_hist, 1./(sum(comb_hist,2)+eps));
-        
-        X_train = comb_hist;
-        X_test = comb_hist;
 
-        KM_train = vl_alldist2(X_train',X_train','KL1');
-        KM_test = vl_alldist2(X_test',X_train','KL1');
+        train_set = sort(train_set);
+        test_set = setdiff(1:ngraphs,train_set')';
 
+        train_classes = data.dataset.clss(train_set);
+        test_classes = data.dataset.clss(test_set);
 
-        %% Evaluate
-        % Evaluate nits times to get the accuracy mean and standard deviation
-        accs = zeros(nits,1);
-        for it = 1:nits
-            train_set = [];
+        ntrain_set = size(train_set,1);
+        ntest_set = size(test_set,1);
+    
+        for c = 1:size(combinations,1)
 
-            for i = classes'
-                idx = find(data.dataset.clss == i);
-                lngth_idx = length(idx);
-                p90 = round(lngth_idx*0.9);
-                train_set = [train_set;randsample(idx,p90)];
+            comb = combinations(c,:);
+
+            % Concat histogram
+            comb_hist = [];
+            for i = 1:length(comb)
+                comb_hist = [comb_hist, combine_graphlet_hist(histograms(parts2level == i), comb(i), 'not_combine') ];
             end
 
-            train_set = sort(train_set);
-            test_set = setdiff(1:ngraphs,train_set')';
+            % Normalize hist
+            X = bsxfun(@times, comb_hist, 1./(sum(comb_hist,2)+eps));        
 
-            train_classes = data.dataset.clss(train_set);
-            test_classes = data.dataset.clss(test_set);
-
-            ntrain_set = size(train_set,1);
-            ntest_set = size(test_set,1);
-
+            KM = vl_alldist2(X', X', 'KL1');
+       
             % Training and testing individual kernels
 
-            K_train = [(1:ntrain_set)' KM_train(train_set,train_set)];
-            K_test = [(1:ntest_set)' KM_test(test_set,train_set)];
+            K_train = [(1:ntrain_set)' KM(train_set,train_set)];
+            K_test = [(1:ntest_set)' KM(test_set,train_set)];
 
             cs = 5:5:100;
             best_cv = 0;
@@ -199,9 +194,9 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
                 if(model_libsvm>best_cv)
                     best_cv = model_libsvm;
                     best_c = cs(j);
-                end;
+                end
 
-            end;
+            end
 
             options = sprintf('-s 0 -t 4 -c %f -b 1 -g 0.07 -h 0 -q',...
                 best_c);
@@ -209,13 +204,13 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
             model_libsvm = svmtrain(train_classes,K_train,options);
 
             [~,acc,~] = svmpredict(test_classes,K_test,model_libsvm,'-b 1') ;
-            accs(it) = acc(1);
+            accs(it, c) = acc(1);
         end 
 
-        % Mean and standard deviation
-        maccs(c) = mean(accs) ;
-        mstds(c) = std(accs) ;
     end
+    
+    maccs = mean(accs) ;
+    mstds = std(accs) ;
     
     clear global_var;
     
