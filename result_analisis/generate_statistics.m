@@ -25,11 +25,27 @@ function [] = generate_statistics(result_folder , k)
     fprintf('Whole Data:');
     print_statistics(T)
     
-    split_ind = strcmpi(T.Labelled, 'label') ;
+    for label = {'label', 'unlabel'}
+        split_ind = strcmpi(T.Labelled, label{1}) ;
+        T_aux = T(split_ind,:) ;
     
-    fprintf('Unlabel:');
-    print_statistics(T(~split_ind,:))
-    fprintf('Label:');
-    print_statistics(T(split_ind,:))
+        fprintf('\n------------------------------------------------------\n');
+        
+        fprintf([label{1}, ':']);
+        print_statistics(T_aux)
+        
+        fprintf('Base:');
+        split_ind = strcmpi(T_aux.Config, 'base') ;
+        print_statistics(T_aux(split_ind,:))
+        fprintf('Level:');
+        split_ind = strcmpi(T_aux.Config, 'level') ;
+        print_statistics(T_aux(split_ind,:))
+        fprintf('Hier:');
+        split_ind = strcmpi(T_aux.Config, 'hier') ;
+        print_statistics(T_aux(split_ind,:))
+        fprintf('Comb:');
+        split_ind = strcmpi(T_aux.Config, 'comb') ;
+        print_statistics(T_aux(split_ind,:))
+    end % for
     
 end % function
