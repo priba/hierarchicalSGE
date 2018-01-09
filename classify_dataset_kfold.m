@@ -142,16 +142,26 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
     for it = 1:nits
 
         train_set = [];
-
-        for i = classes'
-            idx = find(data.dataset.clss == i);
-            lngth_idx = length(idx);
-            p90 = round(lngth_idx*0.9);
-            train_set = [train_set;randsample(idx,p90)];
+        
+        w_classes = zeros(1, nclasses) ;
+        
+        for i = 1:nclasses
+            idx = find(data.dataset.clss == classes(i)) ;
+            lngth_idx = length(idx) ;
+            p90 = round(lngth_idx*0.9) ;
+            w_classes(i) = p90 ;
+            train_set = [train_set;randsample(idx,p90)] ;
+        end
+        w_classes = 1./w_classes ;
+        w_classes = w_classes/max(w_classes) ;
+        
+        w_str =  [] ;
+        for i = 1:nclasses
+            w_str = [w_str, sprintf('-w%d %f ', classes(i), w_classes(i))] ;
         end
 
-        train_set = sort(train_set);
-        test_set = setdiff(1:ngraphs,train_set')';
+        train_set = sort(train_set) ;
+        test_set = setdiff(1:ngraphs,train_set')' ;
 
         train_classes = data.dataset.clss(train_set);
         test_classes = data.dataset.clss(test_set);
@@ -184,8 +194,8 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
 
             for j = 1:length(cs)
 
-                options = sprintf('-s 0 -t 4 -v %d -c %f -b 1 -g 0.07 -h 0 -q',...
-                        nits,cs(j));
+                options = sprintf('-s 0 -t 4 -v %d -c %f %s-b 1 -g 0.07 -h 0 -q',...
+                        nits, cs(j), w_str);
                 model_libsvm = svmtrain(train_classes,K_train,options);
 
                 if(model_libsvm>best_cv)
@@ -195,8 +205,8 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
 
             end
 
-            options = sprintf('-s 0 -t 4 -c %f -b 1 -g 0.07 -h 0 -q',...
-                best_c);
+            options = sprintf('-s 0 -t 4 -c %f %s-b 1 -g 0.07 -h 0 -q',...
+                best_c, w_str);
 
             model_libsvm = svmtrain(train_classes,K_train,options);
 

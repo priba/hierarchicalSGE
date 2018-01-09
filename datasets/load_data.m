@@ -16,7 +16,15 @@ function [ data ] = load_data( name, path )
         data.dataset.name = 'PTC' ;
         data.dataset.clss = lptc ;
         data.dataset.graphs = PTC ;
-        data.type = 'kfold' ;
+        data.type = 'kfold' ;        
+    case 'PROTEINS'
+        disp('Loading PTC...') ;
+        load(fullfile(path, 'PROTEINS.mat')) ;
+        lproteins(lproteins == -1) = 2 ;
+        data.dataset.name = 'PROTEINS' ;
+        data.dataset.clss = lproteins ;
+        data.dataset.graphs = PROTEINS ;
+        data.type = 'kfold' ;            
     case 'ENZYMES'
         disp('Loading ENZYMES...') ;
         load(fullfile(path, 'ENZYMES.mat')) ;
