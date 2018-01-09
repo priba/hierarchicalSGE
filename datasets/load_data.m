@@ -22,7 +22,7 @@ function [ data ] = load_data( name, path )
         load(fullfile(path, 'PROTEINS.mat')) ;
         lproteins(lproteins == -1) = 2 ;
         data.dataset.name = 'PROTEINS' ;
-        data.dataset.clss = lproteins ;
+        data.dataset.clss = lproteins' ;
         data.dataset.graphs = PROTEINS ;
         data.type = 'kfold' ;            
     case 'ENZYMES'
