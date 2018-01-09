@@ -13,7 +13,7 @@ function [] = generate_statistics(result_folder , k)
         T(ind(1:k),:)
     end % function
     
-    T = readtable( [ result_folder , 'summary.csv' ] ) ;
+    T = readtable( fullfile( result_folder , 'summary.csv' ) ) ;
     
     try
         T.Var11 = [];
