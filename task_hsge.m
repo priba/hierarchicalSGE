@@ -1,13 +1,18 @@
 %% Run classification script
-function [] = task_hsge(task_id, dataset_path, dataset_name, output_path)
+function [] = task_hsge(task_id, dataset_path, dataset_name, sub_dataset, output_path)
 
     clc;
     rng(0); 
-    
-     % Check input parameters
-    if nargin < 3
+      
+    % Check input parameters
+    if nargin < 5
         output_path = [ './output/', dataset_name, '/'] ;
     end % if
+    
+    if nargin < 4
+        sub_dataset = [] ;
+        output_path = [ './output/', dataset_name, '/'] ;        
+    end % if    
 
     if ~exist(output_path, 'dir')
         mkdir(output_path)
@@ -31,7 +36,7 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, output_path)
     add_paths(root_path) ;
     
     % Load dataset
-    data = load_data(dataset_name, dataset_path) ;
+    data = load_data(dataset_name, sub_dataset, dataset_path) ;
     
     % Information
     VERBOSE = 1 ;
@@ -50,10 +55,16 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, output_path)
     clustering_func = run_params{task_id, 7};
     config = run_params{task_id, 8};
     max2  = run_params{task_id, 9};
-
-    classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-    'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
-    'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
-    'config', config, 'nits', nits, 'task_id', task_id) ;
     
+    if strcmp(data.type, 'kfold')
+        classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
+        'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+        'config', config, 'nits', nits, 'task_id', task_id) ;
+    else
+        classify_dataset_partition(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
+        'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+        'config', config, 'nits', nits, 'task_id', task_id) ;
+    end
 end
