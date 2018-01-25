@@ -6,7 +6,7 @@ function run_params = experiments()
 eps_i = [ 0.1 ; 0.05 ] ;
 del_i = [ 0.1 ; 0.05 ] ;
 max2 = [7; 5; 3];
-node_label = {'unlabel' , 'label'};
+node_label = {'label'};
 node_label_id = (1:size(node_label,2))';
 
 % Hierarchy

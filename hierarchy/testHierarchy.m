@@ -3,11 +3,8 @@ function [  ] = testHierarchy( mutag_path, levels, clustering, reduction, delta 
 %   Load the graphs specified in path and generate the hierarchy
 %   Example:
 %       testHierarchy( '/media/priba/PPAP/Datasets/STDGraphs/MUTAG.mat', 3, @girvan_newman, 2, 0.1 )
-<<<<<<< HEAD:testHierarchy.m
-=======
 
     % Load data
->>>>>>> d60c0166f1b74778d515bc2548fee794a18b7344:hierarchy/testHierarchy.m
     G = load(mutag_path) ;
     
     % Select specific graph

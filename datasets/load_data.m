@@ -98,33 +98,20 @@ function [ data ] = load_data( name, subset, path )
             clss_test] = load_coildel(fullfile(path, 'COIL-DEL', 'data')) ;
         data.dataset.name = 'COIL-DEL' ;
         data.type = 'partition' ;
-        data.dataset.graphs_train = graphs_train ;
-        data.dataset.graphs_valid = graphs_valid ;
+        data.dataset.graphs_train = [graphs_train, graphs_valid] ;
+        data.dataset.clss_train = [clss_train; clss_valid] ;
         data.dataset.graphs_test = graphs_test ;
-        data.dataset.clss_train = clss_train ;
-        data.dataset.clss_valid = clss_valid ;
-        data.dataset.clss_test = clss_test ;        
+        data.dataset.clss_test = clss_test ;
         
     case 'GREC'
         
         [graphs_train, clss_train, graphs_valid, clss_valid, graphs_test, ...
-            clss_test] = load_grec(fullfile(path, 'GREC', 'data')) ;
-        
-%         ntry = 5 ;        
-%         graphs_train = graphs_train([1:ntry,end-ntry:end]) ;
-%         graphs_valid = graphs_valid([1:ntry,end-ntry:end]) ;
-%         graphs_test = graphs_test([1:ntry,end-ntry:end]) ;
-%         clss_train = clss_train([1:ntry,end-ntry:end]) ;
-%         clss_valid = clss_valid([1:ntry,end-ntry:end]) ;
-%         clss_test = clss_test([1:ntry,end-ntry:end]) ;
-        
+            clss_test] = load_grec(fullfile(path, 'GREC', 'data')) ;        
         data.dataset.name = 'GREC' ;
         data.type = 'partition' ;
-        data.dataset.graphs_train = graphs_train ;
-        data.dataset.graphs_valid = graphs_valid ;
+        data.dataset.graphs_train = [graphs_train, graphs_valid] ;
+        data.dataset.clss_train = [clss_train; clss_valid] ;
         data.dataset.graphs_test = graphs_test ;
-        data.dataset.clss_train = clss_train ;
-        data.dataset.clss_valid = clss_valid ;
         data.dataset.clss_test = clss_test ;
         
     case 'AIDS'
@@ -133,11 +120,9 @@ function [ data ] = load_data( name, subset, path )
             clss_test] = load_aids(fullfile(path, 'AIDS', 'data')) ;        
         data.dataset.name = 'AIDS' ;
         data.type = 'partition' ;
-        data.dataset.graphs_train = graphs_train ;
-        data.dataset.graphs_valid = graphs_valid ;
+        data.dataset.graphs_train = [graphs_train, graphs_valid] ;
+        data.dataset.clss_train = [clss_train; clss_valid] ;
         data.dataset.graphs_test = graphs_test ;
-        data.dataset.clss_train = clss_train ;
-        data.dataset.clss_valid = clss_valid ;
         data.dataset.clss_test = clss_test ;
             
     case 'HISTOGRAPH'
@@ -146,11 +131,9 @@ function [ data ] = load_data( name, subset, path )
             clss_test] = load_histograph(fullfile(path, 'HistoGraph'), subset) ;        
         data.dataset.name = 'HISTOGRAPH' ;
         data.type = 'partition' ;
-        data.dataset.graphs_train = graphs_train ;
-        data.dataset.graphs_valid = graphs_valid ;
+        data.dataset.graphs_train = [graphs_train, graphs_valid] ;
+        data.dataset.clss_train = [clss_train; clss_valid] ;
         data.dataset.graphs_test = graphs_test ;
-        data.dataset.clss_train = clss_train ;
-        data.dataset.clss_valid = clss_valid ;
         data.dataset.clss_test = clss_test ;        
                 
     otherwise
