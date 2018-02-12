@@ -42,7 +42,7 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, sub_dataset, output
     VERBOSE = 1 ;
     
     % Number of iterations
-    nits = 10 ;
+    nits = 5 ;
     
     run_params = experiments();
 
@@ -57,14 +57,28 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, sub_dataset, output
     max2  = run_params{task_id, 9};
     
     if strcmp(data.type, 'kfold')
+        
         classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
         'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
         'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
         'config', config, 'nits', nits, 'task_id', task_id) ;
+    
     else
-        classify_dataset_partition(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
-        'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
-        'config', config, 'nits', nits, 'task_id', task_id) ;
+        
+        if nits > 1
+            
+            classify_dataset_partition_iter(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+            'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
+            'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+            'config', config, 'nits', nits, 'task_id', task_id) ;
+        
+        else
+            
+            classify_dataset_partition(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+            'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
+            'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+            'config', config, 'nits', nits, 'task_id', task_id) ;
+        
+        end
     end
 end

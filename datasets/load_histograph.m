@@ -28,6 +28,7 @@ function [ graphs_train, clss_train, graphs_valid, clss_valid, ...
         ind = sub2ind(size(graphs_train(i).am),graphs_train(i).e(:,1),graphs_train(i).e(:,2)) ;
         graphs_train(i).am(ind) = 1 ;
         v_all = [v_all; graphs_train(i).nl.values] ;
+%         graphs_train(i).am = double(graphs_train(i).am | graphs_train(i).am') ;
     end
 
     for i = 1:nvalid
@@ -37,6 +38,7 @@ function [ graphs_train, clss_train, graphs_valid, clss_valid, ...
         ind = sub2ind(size(graphs_valid(i).am),graphs_valid(i).e(:,1),graphs_valid(i).e(:,2)) ;
         graphs_valid(i).am(ind) = 1 ;
         v_all = [v_all; graphs_valid(i).nl.values] ;
+%         graphs_valid(i).am = double(graphs_valid(i).am | graphs_valid(i).am');
     end
 
     for i = 1:ntest
@@ -46,6 +48,7 @@ function [ graphs_train, clss_train, graphs_valid, clss_valid, ...
         ind = sub2ind(size(graphs_test(i).am),graphs_test(i).e(:,1),graphs_test(i).e(:,2)) ;
         graphs_test(i).am(ind) = 1 ;
         v_all = [v_all; graphs_test(i).nl.values] ;
+%         graphs_test(i).am = double(graphs_test(i).am | graphs_test(i).am');
     end
     
     cl = kmeans(v_all, k, 'EmptyAction', 'singleton', 'MaxIter', 1000) ;

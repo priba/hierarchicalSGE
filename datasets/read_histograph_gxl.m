@@ -20,14 +20,17 @@ node_expr = [...
 edge_expr = '\s*<edge\s\w*="[0-9-]+_([0-9]*)"\s\w*="[0-9-]+_([0-9]*)"/>' ;
 
 tokens = regexp(fs, node_expr, 'tokens') ;
+
 if(isempty(tokens))    
     warning('Warning: Parsing nodes') ;
 end
+
 nvertices = size(tokens, 2) ;
-vertices = [] ;
+vertices = zeros(nvertices, 2) ;
 atrvertices = zeros(nvertices, 2) ;
 
 for i = 1:nvertices
+    vertices(i, :) = [str2double(tokens{i}(2)), str2double(tokens{i}(3))] ;
     atrvertices(i, :) = [str2double(tokens{i}(2)), str2double(tokens{i}(3))] ;
 end
 

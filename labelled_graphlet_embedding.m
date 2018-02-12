@@ -15,7 +15,7 @@ function global_var = labelled_graphlet_embedding( graph , graph_id , M , global
     idx = [];
     for isz = 1:MAX2                    
         idx = [idx;find(sizes_graphlets==isz,M(isz))];
-    end;
+    end
 
     % idx = sort(idx);
     graphlets = graphlets(idx);
@@ -59,7 +59,7 @@ function global_var = labelled_graphlet_embedding( graph , graph_id , M , global
     for j = 1:size(graphletsge5,1)
         A = sparse(indices_vertices_graphletsge5{j}(1:2:end),indices_vertices_graphletsge5{j}(2:2:end),1,szA(j),szA(j));
         betweenness_centralities{j} = sort(round(betweenness_centrality(double(A|A'))))';
-    end;
+    end
 
     clear graphletsge5;
 
@@ -81,12 +81,12 @@ function global_var = labelled_graphlet_embedding( graph , graph_id , M , global
             edge_sign = cellfun(@(x) sort(graph.el.values{x, 1})', idx_edges, 'UniformOutput', false);
         else
             edge_sign = cellfun(@(x) sort(graph.el.values(x, 1))', idx_edges, 'UniformOutput', false);
-        end;
-    end;
+        end
+    end
 
     for j = 1:size(hash_codes,1)
       	hash_codes{j} = [node_sign{j},edge_sign{j},hash_codes{j},zeros(1,2*sizes_graphlets(j)-size(hash_codes{j},2))];
-    end;
+    end
 
     clear idxle4 idxle5 sorted_degrees_nodes betweenness_centralities;
 
@@ -95,7 +95,7 @@ function global_var = labelled_graphlet_embedding( graph , graph_id , M , global
 
         if(~nnz(idxj))
             continue;
-        end;
+        end
 
         hash_codes_j = cat(1,hash_codes{idxj});
         global_var.hash_codes_uniq{j} = unique([global_var.hash_codes_uniq{j};hash_codes_j],'stable','rows');
@@ -107,6 +107,6 @@ function global_var = labelled_graphlet_embedding( graph , graph_id , M , global
         global_var.idx_bin{j} = [global_var.idx_bin{j};idx];
 
         clear idxj idx;
-    end;
+    end
 
 end

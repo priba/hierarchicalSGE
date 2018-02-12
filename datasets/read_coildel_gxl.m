@@ -12,7 +12,7 @@ if(isempty(tokens))
     error('Error: Parsing nodes');
 end;
 tokens = cellfun(@str2double,tokens,'UniformOutput',false) ; 
-vertices = [] ;
+vertices = cell2mat(cellfun(@(x) x(2:3), tokens, 'UniformOutput', false)') ; 
 atrvertices = cell2mat(cellfun(@(x) x(2:3), tokens, 'UniformOutput', false)') ; 
 clear tokens ;
 
@@ -25,6 +25,5 @@ end;
 tokens = cellfun(@str2double,tokens,'UniformOutput',false);
 edges = cell2mat(cellfun(@(x) x(1:2),tokens,'UniformOutput',false)') + 1; 
 atredges = cell2mat(cellfun(@(x) x(3),tokens,'UniformOutput',false)') ; clear tokens;
-nedges = size(edges,1);
 
 end

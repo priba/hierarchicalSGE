@@ -54,7 +54,7 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     config = 'base' ;% { 'base', 'comb', 'hier', 'level' } ;
 
     % Standard error
-    nits = 10 ;
+    nits = 5 ;
 
     for eps = eps_i
         for del = del_i

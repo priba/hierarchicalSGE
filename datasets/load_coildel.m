@@ -1,7 +1,7 @@
 function [ graphs_train, clss_train, graphs_valid, clss_valid,...
     graphs_test, clss_test] = load_coildel(folder)
     
-    %% Load GREC database
+    %% Load COIL-DEL database
 
     [fns_train,clss_train] = read_coildel_cxl(fullfile(folder, 'train.cxl')) ;
     [fns_valid,clss_valid] = read_coildel_cxl(fullfile(folder, 'valid.cxl')) ;
@@ -21,7 +21,6 @@ function [ graphs_train, clss_train, graphs_valid, clss_valid,...
         ind = sub2ind(size(graphs_train(i).am),graphs_train(i).e(:,1),graphs_train(i).e(:,2)) ;
         graphs_train(i).am(ind) = 1 ;
         v_all = [v_all; graphs_train(i).nl.values] ;
-%         graphs_train(i).am = double(graphs_train(i).am |graphs_train(i).am');
     end;
 
     for i = 1:nvalid
@@ -29,8 +28,7 @@ function [ graphs_train, clss_train, graphs_valid, clss_valid,...
             graphs_valid(i).el.values] = read_coildel_gxl(fullfile(folder, fns_valid{i})) ;
         graphs_valid(i).am = zeros(size(graphs_valid(i).nl.values,1),size(graphs_valid(i).nl.values,1)) ;
         ind = sub2ind(size(graphs_valid(i).am),graphs_valid(i).e(:,1),graphs_valid(i).e(:,2)) ;
-        graphs_valid(i).am(ind) = 1 ;
-%         graphs_valid(i).am = double(graphs_valid(i).am |graphs_valid(i).am');
+        graphs_valid(i).am(ind) = 1 ;        
         v_all = [v_all; graphs_valid(i).nl.values] ;
     end;
 
@@ -40,7 +38,6 @@ function [ graphs_train, clss_train, graphs_valid, clss_valid,...
         graphs_test(i).am = zeros(size(graphs_test(i).nl.values,1),size(graphs_test(i).nl.values,1)) ;
         ind = sub2ind(size(graphs_test(i).am),graphs_test(i).e(:,1),graphs_test(i).e(:,2)) ;
         graphs_test(i).am(ind) = 1 ;
-%         graphs_test(i).am = double(graphs_test(i).am |graphs_test(i).am');
         v_all = [v_all; graphs_test(i).nl.values] ;
     end;
     

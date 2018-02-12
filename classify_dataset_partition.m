@@ -75,7 +75,7 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
         if VERBOSE
             fprintf('Graph: %d. ',i);
             tic;
-        end ;
+        end 
         
         if ~strcmpi(config, 'base')
             H = generateHierarchy( data.dataset.graphs(i), pyr_levels, clustering_func, pyr_reduction, edge_thresh ) ;
@@ -93,9 +93,9 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
                     for j_ = i_+1:pyr_levels
                         hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
                         hc = hc + 1 ;
-                    end ; % for
-                end ; % if
-            end ; % for
+                    end  % for
+                end  % if
+            end  % for
             
         else
             
@@ -112,8 +112,8 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
         
         if VERBOSE
             toc
-        end ;
-    end;
+        end 
+    end
 
     % Histogram dimensions
     dim_hists = cell(n_parts,1) ;
@@ -139,10 +139,10 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
     end
     combinations = allcomb( combinations ) ;
     
-    maccs = zeros(size(combinations, 1), 1);
-    mstds = zeros(size(combinations, 1), 1);
+    maccs = zeros(size(combinations, 1), 1) ;
+    mstds = zeros(size(combinations, 1), 1) ;
     
-    w_classes = zeros(1, nclasses) ;    
+    w_classes = ones(1, nclasses) ;    
     for i = 1:nclasses
         w_classes(i) = nnz(data.dataset.clss_train == classes(i)) ;        
     end
@@ -158,70 +158,69 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
         comb = combinations(c,:);
 
         % Concat histogram
-        comb_hist = [];
+        comb_hist = [] ;
         for i = 1:length(comb)
-            comb_hist = [comb_hist, combine_graphlet_hist(histograms(parts2level == i), comb(i), 'not_combine') ];
+            comb_hist = [comb_hist, combine_graphlet_hist(histograms(parts2level == i), comb(i), 'combine') ] ;
         end
         
         % Normalize hist
-        X = bsxfun(@times, comb_hist, 1./(sum(comb_hist,2)+eps));
+        X = bsxfun(@times, comb_hist, 1./(sum(comb_hist,2)+eps)) ;
         
-        X_train = X(1:ntrain,:);
-        X_test = X(ntrain+(1:ntest),:);
+        X_train = X(1:ntrain,:) ;
+        X_test = X(ntrain+(1:ntest),:) ;
 
-        KM_train = vl_alldist2(X_train',X_train','KL1');
-        KM_test = vl_alldist2(X_test',X_train','KL1');
-
+        KM_train = vl_alldist2(X_train',X_train','KL1') ;
+        KM_test = vl_alldist2(X_test',X_train','KL1') ;
 
         %% Evaluate
         % Evaluate nits times to get the accuracy mean and standard deviation
-        train_classes = data.dataset.clss(1:ntrain);
-        test_classes = data.dataset.clss(ntrain+(1:ntest));
+        train_classes = data.dataset.clss(1:ntrain) ;
+        test_classes = data.dataset.clss(ntrain+(1:ntest)) ;
 
         % Training and testing individual kernels
 
-        K_train = [(1:ntrain)' KM_train];
-        K_test = [(1:ntest)' KM_test];
+        K_train = [(1:ntrain)' KM_train] ;
+        K_test = [(1:ntest)' KM_test] ;
 
-        cs = 5:5:100;
-        best_cv = 0;
+        cs = 5:5:100 ;
+        best_cv = 0 ;
 
         for j = 1:length(cs)
 
             options = sprintf('-s 0 -t 4 -v %d -c %f %s-b 1 -g 0.07 -h 0 -q',...
-                    nits,cs(j), w_str);
-            model_libsvm = svmtrain(train_classes,K_train,options);
+                    nits,cs(j), w_str) ;
+            model_libsvm = svmtrain(train_classes,K_train,options) ;
 
             if(model_libsvm>best_cv)
-                best_cv = model_libsvm;
-                best_c = cs(j);
-            end;
+                best_cv = model_libsvm ;
+                best_c = cs(j) ;
+            end
 
-        end;
+        end
 
         options = sprintf('-s 0 -t 4 -c %f %s-b 1 -g 0.07 -h 0 -q',...
-            best_c, w_str);
+            best_c, w_str) ;
 
-        model_libsvm = svmtrain(train_classes,K_train,options);
+        model_libsvm = svmtrain(train_classes,K_train,options) ;
 
-        [~,acc,~] = svmpredict(test_classes,K_test,model_libsvm,'-b 1');
+        [~,acc,~] = svmpredict(test_classes,K_test,model_libsvm,'-b 1') ;
 
         % Mean
-        maccs(c) = acc(1);
+        maccs(c) = acc(1) ;
         
     end
     
-    clear global_var;
+    clear global_var ;
     
     % Save results
     if strcmpi(node_label, 'unlabel')
-        combinations = combinations + 2;
+        combinations = combinations + 2 ;
     else
         if size(combinations, 2) > 1
-            combinations(:, 2:end) = combinations(:, 2:end) + 2;
+            combinations(:, 2:end) = combinations(:, 2:end) + 2 ;
         end
     end 
-    for i = 1:size(combinations,1)
+    for i = 1:size(combinations, 1)
         logger(epsi, del, combinations(i,:), node_label, pyr_levels, pyr_reduction, edge_thresh, func2str(clustering_func), config, nits, maccs(i), mstds(i)) ;
     end 
     

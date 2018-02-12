@@ -5,13 +5,13 @@ function run_params = experiments()
 % SGE
 eps_i = [ 0.1 ; 0.05 ] ;
 del_i = [ 0.1 ; 0.05 ] ;
-max2 = [7; 5; 3];
+max2 = [7; 5; 5];
 node_label = {'label'};
 node_label_id = (1:size(node_label,2))';
 
 % Hierarchy
 pyr_levels = [ 1 ; 2 ; 3 ] ;
-pyr_reduction = [ 2.0 ] ;
+pyr_reduction = [ 1.0 ] ; % [ 2.0 ]
 delta = [ 0.0 ] ;
 clustering_func = { @girvan_newman };
 clustering_func_id = (1:size(clustering_func,2))';

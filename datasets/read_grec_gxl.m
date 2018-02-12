@@ -27,14 +27,14 @@ if(isempty(tokens))
     error('Error: Parsing nodes');
 end;
 nvertices = size(tokens, 2) ;
-vertices = [] ;
-atrvertices = cell(nvertices, 1) ;
+vertices = zeros(nvertices, 2) ;
+atrvertices = zeros(nvertices, 2) ;
 for i = 1:nvertices
-    [~, c] = ismember(tokens{i}{4}, cntrs_atrvertices) ;
-    atrvertices{i} = [str2double(tokens{i}(2)), str2double(tokens{i}(3)), c] ;
+%     [~, c] = ismember(tokens{i}{4}, cntrs_atrvertices) ;
+%     atrvertices{i} = [str2double(tokens{i}(2)), str2double(tokens{i}(3)), c] ;
+    vertices(i, :) = [str2double(tokens{i}(2)), str2double(tokens{i}(3))] ;
+    atrvertices(i, :) = [str2double(tokens{i}(2)), str2double(tokens{i}(3))] ;
 end;
-
-atrvertices = cat(1, atrvertices{:}) ;
 
 % get the source and target of edges and labels
 tokens = regexp(fs,edge_expr,'tokens');
