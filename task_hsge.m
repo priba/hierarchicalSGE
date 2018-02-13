@@ -57,7 +57,7 @@ function [] = task_hsge(task_id, nits, dataset_path, dataset_name, sub_dataset, 
     
     if strcmp(data.type, 'kfold')
         
-        if nits == 1
+        if nits <= 1
             nits = 10 ;
         end
         
