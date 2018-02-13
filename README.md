@@ -33,7 +33,7 @@ Collection of datasets to test:
 - [X] NCI1
 - [X] NCI109
 - [X] D & D
-- [ ] MAO
+- [X] MAO
 
 ## Paper
 
