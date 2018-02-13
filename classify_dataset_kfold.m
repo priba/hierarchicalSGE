@@ -84,7 +84,7 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
             % Construct hierarchy           
             for i_ = 1:pyr_levels
                 if ~strcmpi(config, 'hier')
-                    hier_graph{hc} = getLevel(H, i_) ;
+                    hier_graph{hc} = getLevels(H, i_) ;
                     hc = hc + 1 ;
                 end % if
                 if ~strcmpi(config, 'level')

@@ -23,7 +23,7 @@ function [  ] = testHierarchy( mutag_path, levels, clustering, reduction, delta 
     fprintf('Levels\n')
     for i = 1:levels
         fprintf('Level %d\n', i)
-        getLevel(H, i)
+        getLevels(H, i)
     end % for
     
     % Subhierarchies
