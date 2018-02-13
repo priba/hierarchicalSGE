@@ -17,6 +17,10 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
                 n_parts = pyr_levels ;
                 len = ones(pyr_levels, 1) ;
                 val = ones(pyr_levels, 1) ; 
+            case 'level_pyr'
+                n_parts = pyr_levels*(pyr_levels-1)/2 ;        
+                len = pyr_levels-1:-1:1 ;
+                val = 1:pyr_levels-1 ; 
             case 'base'
                 if pyr_levels ~= 1
                     warning('config is base but pyr_levels is not one')
@@ -83,13 +87,18 @@ function [  ] = classify_dataset_kfold( data, params, logger, varargin )
 
             % Construct hierarchy           
             for i_ = 1:pyr_levels
-                if ~strcmpi(config, 'hier')
+                if ~strcmpi(config, 'hier') && ~strcmpi(config, 'level_pyr')
                     hier_graph{hc} = getLevels(H, i_) ;
                     hc = hc + 1 ;
                 end % if
                 if ~strcmpi(config, 'level')
                     for j_ = i_+1:pyr_levels
-                        hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
+                        if ~strcmpi(config, 'level_pyr')
+                            hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
+                        end % if
+                        if strcmpi(config, 'level_pyr')
+                            hier_graph{hc} = getLevels(H, i_, j_) ;
+                        end
                         hc = hc + 1 ;
                     end ; % for
                 end ; % if
