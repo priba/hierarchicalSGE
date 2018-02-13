@@ -1,5 +1,5 @@
 %% Run classification script
-function [] = task_hsge(task_id, dataset_path, dataset_name, sub_dataset, output_path)
+function [] = task_hsge(task_id, nits, dataset_path, dataset_name, sub_dataset, output_path)
 
     clc;
     rng(0); 
@@ -41,8 +41,7 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, sub_dataset, output
     % Information
     VERBOSE = 1 ;
     
-    % Number of iterations
-    nits = 5 ;
+    % Number of iterations nits = 10    
     
     run_params = experiments();
 
@@ -57,6 +56,10 @@ function [] = task_hsge(task_id, dataset_path, dataset_name, sub_dataset, output
     max2  = run_params{task_id, 9};
     
     if strcmp(data.type, 'kfold')
+        
+        if nits == 1
+            nits = 10 ;
+        end
         
         classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
         'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
