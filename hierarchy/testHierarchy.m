@@ -15,17 +15,32 @@ function [  ] = testHierarchy( mutag_path, levels, clustering, reduction, delta 
     
     % Hierarchy
     addpath('clustering') ;
-    addpath(genpath('/home/adutta/Dropbox/Personal/Workspace/AdditionalTools/matlab_bgl')) ;
+    addpath(genpath('D:\User\Documentos\MATLAB\matlab_bgl')) ;
     H = generateHierarchy( G, levels, clustering, reduction, delta ) ;
     
-    % Hierarchy operation
+    %% Hierarchy operation
+    % Separated Levels
+    fprintf('Levels\n')
     for i = 1:levels
+        fprintf('Level %d\n', i)
         getLevel(H, i)
     end % for
     
+    % Subhierarchies
+    fprintf('Subhierarchies\n')
     for i = 1:levels
         for j = i:levels
+            fprintf('Levels %d, %d\n', i, j)
             getSubhierarchy(H, i, j)
+        end % for
+    end % for
+    
+    % Combine levels
+    fprintf('Combine Levels\n')
+    for i = 1:levels
+        for j = i:levels
+            fprintf('Levels %d, %d\n', i, j)
+            getLevels(H, i, j)
         end % for
     end % for
     
