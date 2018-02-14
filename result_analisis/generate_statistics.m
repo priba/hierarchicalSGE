@@ -36,16 +36,39 @@ function [] = generate_statistics(result_folder , k)
         
         fprintf('Base:');
         split_ind = strcmpi(T_aux.Config, 'base') ;
-        print_statistics(T_aux(split_ind,:))
+        if ~any(split_ind)
+            fprintf(' None\n') ;
+        else
+            print_statistics(T_aux(split_ind,:))            
+        end        
         fprintf('Level:');
         split_ind = strcmpi(T_aux.Config, 'level') ;
-        print_statistics(T_aux(split_ind,:))
+        if ~any(split_ind)
+            fprintf(' None\n') ;
+        else
+            print_statistics(T_aux(split_ind,:))            
+        end  
+        fprintf('Level_Pyr:');
+        split_ind = strcmpi(T_aux.Config, 'level_pyr') ;
+        if ~any(split_ind)
+            fprintf(' None\n') ;
+        else
+            print_statistics(T_aux(split_ind,:))            
+        end  
         fprintf('Hier:');
         split_ind = strcmpi(T_aux.Config, 'hier') ;
-        print_statistics(T_aux(split_ind,:))
+        if ~any(split_ind)
+            fprintf(' None\n') ;
+        else
+            print_statistics(T_aux(split_ind,:))            
+        end  
         fprintf('Comb:');
         split_ind = strcmpi(T_aux.Config, 'comb') ;
-        print_statistics(T_aux(split_ind,:))
+        if ~any(split_ind)
+            fprintf(' None\n') ;
+        else
+            print_statistics(T_aux(split_ind,:))            
+        end  
     end % for
     
 end % function
