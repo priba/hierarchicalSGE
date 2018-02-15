@@ -15,7 +15,7 @@ pyr_reduction = [ 1.0 ] ; % [ 2.0 ]
 delta = [ 0.0 ] ;
 clustering_func = { @girvan_newman };
 clustering_func_id = (1:size(clustering_func,2))';
-config = {'level_pyr'} ;
+config = {'2level_pyr'} ;
 config_id = (1:size(config, 2))';
 
 % Embedding
