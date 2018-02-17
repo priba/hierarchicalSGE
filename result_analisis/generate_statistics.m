@@ -54,7 +54,14 @@ function [] = generate_statistics(result_folder , k)
             fprintf(' None\n') ;
         else
             print_statistics(T_aux(split_ind,:))            
-        end  
+        end
+        fprintf('2Level_Pyr:');
+        split_ind = strcmpi(T_aux.Config, '2level_pyr') ;
+        if ~any(split_ind)
+            fprintf(' None\n') ;
+        else
+            print_statistics(T_aux(split_ind,:))            
+        end
         fprintf('Hier:');
         split_ind = strcmpi(T_aux.Config, 'hier') ;
         if ~any(split_ind)
