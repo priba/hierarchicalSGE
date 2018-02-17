@@ -160,7 +160,7 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
         % Concat histogram
         comb_hist = [] ;
         for i = 1:length(comb)
-            comb_hist = [comb_hist, combine_graphlet_hist(histograms(parts2level == i), comb(i), 'combine') ] ;
+            comb_hist = [comb_hist, combine_graphlet_hist(histograms(parts2level == i), comb(i), 'not_combine') ] ;
         end
         
         % Normalize hist
