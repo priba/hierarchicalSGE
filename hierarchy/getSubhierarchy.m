@@ -8,7 +8,7 @@ function [ G ] = getSubhierarchy( H , leveli, levelj )
     end % if
     
     if levelj==leveli
-        G = getLevel( H , leveli ) ;
+        G = getLevels( H , leveli ) ;
         G.levels = 1 ;
         G.szLevels = size(G.am,1) ;
     else
