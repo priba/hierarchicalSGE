@@ -3,8 +3,8 @@ function [] = dataset_statistics(dataset_name, sub_dataset, dataset_path)
     function classStatistics(clss)
         classes = unique(clss) ;
         fprintf('\t* Classes: %d ( ', length(classes)) ;
-        for i = classes'
-            fprintf('%d: %d;\t', i, sum(i==clss))
+        for c = classes'
+            fprintf('%d: %d;\t', c, sum(c==clss))
         end % for
         fprintf(' )\n') ;
     end % function
@@ -36,11 +36,44 @@ function [] = dataset_statistics(dataset_name, sub_dataset, dataset_path)
     
     dataset = data.dataset ;
     
-    fprintf('Dataset %s\n\t* Type: %s\n\t* Graphs: %d\n', dataset.name, data.type, length(dataset.clss)) ;
-    clear data
+    fprintf('Dataset %s\n\t* Type: %s\n', dataset.name, data.type) ;
     
-    classStatistics(dataset.clss) ;
-    
-    graphStatistics(dataset.graphs)
+    switch(lower(data.type))
+        case 'partition'
+            fields = fieldnames(dataset) ;
+            ind = strfind(fields,'clss') ;
+            ind = find(not(cellfun('isempty', ind)));
+            clss = [] ;
+            graphs = [];
+            for i = ind'
+                partition = fields{i} ;
+                partition = strrep(partition,'clss_', '') ;
+                fprintf('* Partition: %s\n', partition) ;
+                
+                clss_partition = getfield(dataset, ['clss_' partition]) ;
+                fprintf('\t* Graphs: %d\n', length(clss_partition)) ;
+                classStatistics(clss_partition) ;
+                
+                graphs_partition = getfield(dataset, ['graphs_' partition]) ;
+                graphStatistics(graphs_partition) ;
+                
+                clss = [clss; clss_partition] ; 
+                graphs = [graphs, graphs_partition] ; 
+            end % for
+            fprintf('* Global\n') ;
+            fprintf('\t* Graphs: %d\n', length(clss)) ;
+            classStatistics(clss) ;
+            graphStatistics(graphs) ;
+        case 'kfold'
+            fprintf('\t* Graphs: %d\n', length(dataset.clss)) ;
+            clear data
+
+            classStatistics(dataset.clss) ;
+
+            graphStatistics(dataset.graphs) ;
+        otherwise
+            error('dataset_statistic:incorrectType', ...
+            'Error.\nNot implemented type %s.', data.type)
+    end % switch
     
 end % function
