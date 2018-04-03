@@ -1,5 +1,5 @@
 %% Run classification script
-function [] = run_hsge(dataset_path, dataset_name, output_path)
+function [] = run_hsge(dataset_path, dataset_name, sub_dataset, output_path)
 
     clc;
 
@@ -16,7 +16,7 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     
     d = dir( [ output_path, '/*.csv' ]) ;
     fileId = fopen(fullfile(output_path, [int2str(length(d)), '_run.csv']), 'w') ;
-    clear d
+    clear d ;
     
     % Header
     fprintf(fileId,'Epsilon;Delta;T;Labelled;Levels;Reduction;Edge_Threshold;Clustering;Config;Iterations;;Mean;Std\n') ;
@@ -33,7 +33,7 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     add_paths(root_path) ;
     
     % Load dataset
-    data = load_data(dataset_name, dataset_path) ;
+    data = load_data(dataset_name, sub_dataset, dataset_path) ;
 
     % Print information
     VERBOSE = 1 ;
@@ -45,13 +45,13 @@ function [] = run_hsge(dataset_path, dataset_name, output_path)
     node_label = 'unlabel' ; % { 'unlabel' , 'label' } ;
 
     % Hierarchy
-    pyr_levels = [ 1 , 2 , 3 ] ;
+    pyr_levels = 3 ; %[ 1 , 2 , 3 ] ;
     
     clustering_func = get_clustering( 'girvan_newman' ) ; % girvan_newman ; % grPartition ;
     
     pyr_reduction = 2 ;
     edge_thresh = 0 ;
-    config = 'base' ;% { 'base', 'comb', 'hier', 'level' } ;
+    config = '2level_pyr_hier' ;% { 'base', 'comb', 'hier', 'level' } ;
 
     % Standard error
     nits = 5 ;

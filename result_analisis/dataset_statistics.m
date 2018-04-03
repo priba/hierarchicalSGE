@@ -28,6 +28,12 @@ function [] = dataset_statistics(dataset_name, sub_dataset, dataset_path)
 
     % Load dataset
     data = load_data(dataset_name, sub_dataset, dataset_path) ;
+    
+    if strcmp(data.type, 'partition')
+        data.dataset.graphs = [data.dataset.graphs_train, data.dataset.graphs_test] ;
+        data.dataset.clss = [data.dataset.clss_train; data.dataset.clss_test] ;
+    end
+    
     dataset = data.dataset ;
     
     fprintf('Dataset %s\n\t* Type: %s\n\t* Graphs: %d\n', dataset.name, data.type, length(dataset.clss)) ;

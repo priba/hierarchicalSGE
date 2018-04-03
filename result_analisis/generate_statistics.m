@@ -71,9 +71,9 @@ function [] = generate_statistics(result_folder , k)
         T_aux = T(split_ind,:) ;
         
         % Compute embedding length for unlabelled graph
-        if strcmpi(label, 'unlabel')
-            T_aux = embedding_size(T_aux) ;
-        end % if
+%         if strcmpi(label, 'unlabel')
+%             T_aux = embedding_size(T_aux) ;
+%         end % if
         
         fprintf('\n------------------------------------------------------\n');
         

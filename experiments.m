@@ -10,12 +10,12 @@ node_label = {'unlabel', 'label'};
 node_label_id = (1:size(node_label,2))';
 
 % Hierarchy
-pyr_levels = [ 1; 2 ; 3 ] ;
-pyr_reduction = [ 1.0 ] ; % [ 2.0 ]
+pyr_levels = [ 1 ; 2 ; 3 ] ;
+pyr_reduction = [ 2.0 ] ;
 delta = [ 0.0 ] ;
 clustering_func = { @girvan_newman };
 clustering_func_id = (1:size(clustering_func,2))';
-config = {'2level_pyr_hier'} ;
+config = {'level_pyr', '2level_pyr', '2level_pyr_hier'} ;
 config_id = (1:size(config, 2))';
 
 % Embedding
