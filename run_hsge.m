@@ -6,7 +6,7 @@ function [] = run_hsge(dataset_path, dataset_name, sub_dataset, output_path)
     rng(0); 
     
     % Check input parameters
-    if nargin < 3
+    if nargin < 4
         output_path = [ './output/', dataset_name, '/'] ;
     end % if
 
@@ -39,42 +39,42 @@ function [] = run_hsge(dataset_path, dataset_name, sub_dataset, output_path)
     VERBOSE = 1 ;
 
     % SGE
-    eps_i = [ 0.1 , 0.05 ] ;
-    del_i = [ 0.1 , 0.05 ] ;
+    eps = 0.05 ;
+    del = 0.05 ;
     max2 = [7, 5, 3] ;
     node_label = 'unlabel' ; % { 'unlabel' , 'label' } ;
 
     % Hierarchy
-    pyr_levels = 3 ; %[ 1 , 2 , 3 ] ;
+    pyr_level = 2 ; %[ 1 , 2 , 3 ] ;
     
     clustering_func = get_clustering( 'girvan_newman' ) ; % girvan_newman ; % grPartition ;
     
-    pyr_reduction = 2 ;
+    pyr_reductions = [1.5, 2.0, 3.0] ;
     edge_thresh = 0 ;
-    config = '2level_pyr_hier' ;% { 'base', 'comb', 'hier', 'level' } ;
+%     config = '2level_pyr_hier' ;% { 'base', 'comb', 'hier', 'level' } ;
+    configs = {'2level_pyr', '2level_pyr_hier', 'comb', 'level'} ;
 
     % Standard error
     nits = 5 ;
 
-    for eps = eps_i
-        for del = del_i
-            for pyr_level = pyr_levels
-                if strcmp(data.type, 'kfold')                                        
-                    classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-                        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
-                        'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
-                        'config', config, 'nits', nits) ;
-                else
-                    classify_dataset_partition(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
-                        'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
-                        'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
-                        'config', config, 'nits', nits) ;                    
-                end
-            end 
-        end 
+    for config = configs        
+        for pyr_reduction = pyr_reductions
+            if strcmp(data.type, 'kfold')                                        
+                classify_dataset_kfold(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+                    'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
+                    'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+                    'config', config{:}, 'nits', nits) ;
+            else
+                classify_dataset_partition(data, params, logger, 'VERBOSE', VERBOSE, 'epsilon', eps, 'delta', del, ...
+                    'pyr_levels', pyr_level, 'pyr_reduction', pyr_reduction, 'edge_thresh', edge_thresh, ...
+                    'max2', max2(1:pyr_level), 'label', node_label, 'clustering_func' , clustering_func, ...
+                    'config', config{:}, 'nits', nits) ;                    
+            end
+        end       
     end
 
-    fclose(logger);  
+%     fclose(logger);
+    fclose(fileId);  
     
     % Remove paths
     remove_paths( ) ;

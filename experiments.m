@@ -6,7 +6,7 @@ function run_params = experiments()
 eps_i = [ 0.1 ; 0.05 ] ;
 del_i = [ 0.1 ; 0.05 ] ;
 max2 = [7; 5; 5];
-node_label = {'unlabel', 'label'};
+node_label = {'label'};
 node_label_id = (1:size(node_label,2))';
 
 % Hierarchy
@@ -15,7 +15,7 @@ pyr_reduction = [ 2.0 ] ;
 delta = [ 0.0 ] ;
 clustering_func = { @girvan_newman };
 clustering_func_id = (1:size(clustering_func,2))';
-config = {'level_pyr', '2level_pyr', '2level_pyr_hier'} ;
+config = {'2level_pyr'} ;
 config_id = (1:size(config, 2))';
 
 % Embedding

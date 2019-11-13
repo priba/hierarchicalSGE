@@ -16,7 +16,19 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
             case 'level'
                 n_parts = pyr_levels ;
                 len = ones(pyr_levels, 1) ;
-                val = ones(pyr_levels, 1) ; 
+                val = ones(pyr_levels, 1) ;
+            case 'level_pyr'
+                n_parts = pyr_levels*(pyr_levels-1)/2 ;        
+                len = pyr_levels-1:-1:1 ;
+                val = 1:pyr_levels-1 ; 
+            case '2level_pyr'
+                n_parts = pyr_levels*(pyr_levels+1)/2 ;
+                len = pyr_levels:-1:1 ;
+                val = 1:pyr_levels ; 
+            case '2level_pyr_hier'
+                n_parts = pyr_levels*pyr_levels ;
+                len = 2*pyr_levels-1:-2:1 ;
+                val = 1:pyr_levels ;
             case 'base'
                 if pyr_levels ~= 1
                     warning('config is base but pyr_levels is not one')
@@ -49,6 +61,13 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
     [parts2level , n_parts] = get_parts(config, pyr_levels) ;   
     
     %% Database information
+%     idx1 = sort(randsample(size(data.dataset.graphs_train, 2), 5)) ;
+%     idx2 = sort(randsample(size(data.dataset.graphs_test, 2), 5)) ;    
+%     data.dataset.graphs_train = data.dataset.graphs_train(:, idx1) ;
+%     data.dataset.graphs_test = data.dataset.graphs_test(:, idx2) ;
+%     data.dataset.clss_train = data.dataset.clss_train(idx1, :) ;
+%     data.dataset.clss_test = data.dataset.clss_test(idx2, :) ;
+    
     data.dataset.graphs = [data.dataset.graphs_train , data.dataset.graphs_test];
     data.dataset.clss = [data.dataset.clss_train; data.dataset.clss_test];
     ntrain = size(data.dataset.graphs_train, 2);
@@ -58,7 +77,7 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
     nclasses = size(classes, 1);
     if VERBOSE
         fprintf('Dataset Information\n\tNumber of graph:%d\t(Train %d\tTest %d)\n\tNumber of classes: %d\n',...
-            ngraphs,ntrain,ntest, nclasses) ;
+            ngraphs, ntrain, ntest, nclasses) ;
     end
     
     %% Create histogram indices  
@@ -85,14 +104,20 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
 
             % Construct hierarchy           
             for i_ = 1:pyr_levels
-                if ~strcmpi(config, 'hier')
+                if ~strcmpi(config, 'hier') && ~strcmpi(config, 'level_pyr')
                     hier_graph{hc} = getLevels(H, i_) ;
                     hc = hc + 1 ;
                 end % if
                 if ~strcmpi(config, 'level')
                     for j_ = i_+1:pyr_levels
-                        hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
-                        hc = hc + 1 ;
+                        if ~strcmpi(config, 'level_pyr') && ~strcmpi(config, '2level_pyr')
+                            hier_graph{hc} = getSubhierarchy(H, i_, j_) ;
+                            hc = hc + 1 ;
+                        end % if
+                        if strcmpi(config, 'level_pyr') || strcmpi(config, '2level_pyr') || strcmpi(config, '2level_pyr_hier')
+                            hier_graph{hc} = getLevels(H, i_, j_) ;
+                            hc = hc + 1 ;
+                        end                        
                     end  % for
                 end  % if
             end  % for
@@ -187,9 +212,9 @@ function [  ] = classify_dataset_partition( data, params, logger, varargin )
 
         for j = 1:length(cs)
 
-            options = sprintf('-s 0 -t 4 -v %d -c %f %s-b 1 -g 0.07 -h 0 -q',...
-                    nits,cs(j), w_str) ;
-            model_libsvm = svmtrain(train_classes,K_train,options) ;
+            options = sprintf('-s 0 -t 4 -v 10 -c %f %s-b 1 -g 0.07 -h 0 -q',...
+                    cs(j), w_str) ;
+            model_libsvm = svmtrain(train_classes, K_train, options) ;
 
             if(model_libsvm>best_cv)
                 best_cv = model_libsvm ;
